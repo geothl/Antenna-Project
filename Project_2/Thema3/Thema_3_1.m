@@ -1,0 +1,33 @@
+% system('cd C:\4nec2\exe&start 4nec2.exe&');
+clear;
+lamda=3;
+seg=21;
+Zm=[];
+s1=0.05*lamda;
+st=0.05*lamda;
+s2=3*lamda;
+step=s1:st:s2;
+for k=s1:st:s2
+fileID = fopen('C:\4nec2\out\test_write.nec','wt');
+fprintf(fileID,'CM\n');
+fprintf(fileID,'CE\n');
+fprintf(fileID,'GW %d %d %d %d %d %d %d %3.1f %3.4f\n',[1 seg 0 0 0 0 0 1.5 0.0015]);
+fprintf(fileID,'GW %d %d %3.2f %d %d %3.2f %d %3.1f %3.4f\n',[2 seg k 0 0 k 0 1.5 0.0015]);
+fprintf(fileID,'GE 0\n');
+fprintf(fileID,'GN -1\n');
+fprintf(fileID,'EK\n');
+fprintf(fileID,'EX %d %d %d %d %d %d %d\n',[0 1 5 0 1 0 0]);
+fprintf(fileID,'FR %d %d %d %d %d %d\n',[0 0 0 0 100 0]);
+fprintf(fileID,'RP %d %d %d %d %d %d %d %d\n',[0 37 73 1003 -180 0 5 5]);
+fprintf(fileID,'EN');
+fclose(fileID);
+cd('C:\Users\george theologis\Desktop\ΠΑΝΕΠΙΣΤΗΜΙΟ\7ο ΕΞΑΜΗΝΟ\Κεραίες και Δίαδοση\2η εργασία\Thema3');
+system('4nec2.bat');
+zmn=Zm_calc(seg);
+Zm=[Zm zmn];
+end
+plot(step,real(Zm),step,imag(Zm));
+title(strcat("Parallel half wave dipoles for ",num2str(seg)," segments"));
+legend('R','X');
+xlabel("d: distance in meters");
+ylabel("Zm: Mutual Impedance in Ohms");
